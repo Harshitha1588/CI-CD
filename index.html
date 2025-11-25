@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Billing App – Pytest Unit Testing</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+        h2 {
+            color: #003366;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Python Function: calculate_total(price, qty, discount)</h2>
+
+<pre><code>
+# billing.py
+
+def calculate_total(price, qty, discount):
+    """
+    price: price of each item
+    qty: quantity of items
+    discount: discount percentage
+    """
+    if price &lt; 0 or qty &lt; 0 or discount &lt; 0:
+        raise ValueError("Negative values are not allowed")
+
+    subtotal = price * qty
+    discount_amount = subtotal * (discount / 100)
+    total = subtotal - discount_amount
+
+    return round(total, 2)
+</code></pre>
+
+
+<h2>Pytest Unit Test Cases (All Passing)</h2>
+
+<pre><code>
+# test_billing.py
+
+import pytest
+from billing import calculate_total
+
+def test_calculate_total_normal():
+    assert calculate_total(100, 2, 10) == 180.0  # 200 - 10% = 180
+
+def test_without_discount():
+    assert calculate_total(50, 4, 0) == 200.0
+
+def test_with_high_discount():
+    assert calculate_total(200, 1, 50) == 100.0
+
+def test_zero_quantity():
+    assert calculate_total(100, 0, 10) == 0.0
+
+def test_negative_price_error():
+    with pytest.raises(ValueError):
+        calculate_total(-10, 5, 10)
+
+def test_negative_qty_error():
+    with pytest.raises(ValueError):
+        calculate_total(100, -5, 10)
+
+def test_negative_discount_error():
+    with pytest.raises(ValueError):
+        calculate_total(100, 5, -20)
+</code></pre>
+
+</body>
+</html>
